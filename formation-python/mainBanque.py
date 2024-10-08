@@ -30,4 +30,9 @@ if __name__ == "__main__":
 
     print(f"numéro : {compteD.numero} - solde : {compteD.solde} - Nom : {compteD.titulaire.nom}")
 
+    print(f"nombre de comptes : {Compte.get_nbr_comptes()}")
+
+    del compteM
+
+    print(f"nombre de comptes : {Compte.get_nbr_comptes()}")
 
