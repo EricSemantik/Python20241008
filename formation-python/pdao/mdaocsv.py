@@ -2,7 +2,7 @@ import csv
 from pathlib import Path
 from pdao.mdao import BaseDao
 from pclient.mclient import Client
-from pbanqque.mexception import BanqueDaoNotFoundException
+from pbanque.mexception import BanqueDaoNotFoundException
 
 class ClientDaoCsv(BaseDao):
     def __init__(self, chemin):
@@ -10,19 +10,53 @@ class ClientDaoCsv(BaseDao):
         self.__path = Path(chemin)
 
     def findAll(self):
-        pass
+        return self.__readAll()
     
     def findById(self, id):
-        pass
+        clientsFiltrer = filter(lambda c: c.email == id, self.findAll())
+        
+        try:
+            return next(clientsFiltrer)
+        except StopIteration:
+            raise BanqueDaoNotFoundException(f"Email {id} non trouvée")
     
     def create(self, obj):
-        pass
+        clients = self.findAll()
+        clientsFiltrer = filter(lambda c: c.email == id, clients)
+        
+        try:
+            return next(clientsFiltrer)
+        except StopIteration:
+            clients.append(obj)
+            
+            self.__writeAll(clients)
 
     def update(self, obj):
-        pass
-
+        try:
+            clients = self.findAll()
+            clientsFiltrer = filter(lambda c: c.email == obj.email, clients)
+            client = next(clientsFiltrer)
+            pos = clients.index(client)
+            clients[pos] = obj
+           
+            self.__writeAll(clients)
+        except ValueError:
+            raise BanqueDaoNotFoundException(f"Email {id} non mise à jour")
+        except StopIteration:
+            raise BanqueDaoNotFoundException(f"Email {id} non mise à jour")
+            
     def deleteById(self, id):
-       pass
+        try:
+            clients = self.findAll()
+            clientsFiltrer = filter(lambda c: c.email == id, clients)
+            client = next(clientsFiltrer)
+            clients.remove(client)
+            
+            self.__writeAll(clients)
+        except ValueError:
+            raise BanqueDaoNotFoundException(f"Email {id} non mise à jour")
+        except StopIteration:
+            raise BanqueDaoNotFoundException(f"Email {id} non mise à jour")
 
     def __readAll(self): # lire le fichier et renvoyer client[]
         liste = []
