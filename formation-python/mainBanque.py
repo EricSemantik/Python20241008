@@ -1,5 +1,7 @@
+from datetime import date
 from pclient.mclient import Client
-from pcompte.mcompte import Compte
+from pcompte.mcompte import Compte, CompteEpargne
+from pbanque.mexception import *
 
 if __name__ == "__main__":
 
@@ -26,7 +28,10 @@ if __name__ == "__main__":
 
     print(f"numéro : {compteD.numero} - solde : {compteD.solde} - Nom : {compteD.titulaire.nom}")
 
-    compteD.debiter(100)
+    try:
+        compteD.debiter(100)
+    except BanqueException as e:
+        print(f"Erreur Compte : {e.message}")
 
     print(f"numéro : {compteD.numero} - solde : {compteD.solde} - Nom : {compteD.titulaire.nom}")
 
@@ -35,4 +40,16 @@ if __name__ == "__main__":
     del compteM
 
     print(f"nombre de comptes : {Compte.get_nbr_comptes()}")
+
+    jerome = Client("jerome@gmail.com", "SALOMON", "Jérome")
+
+    compteP = CompteEpargne(452, 2000.0, date(2022, 1, 4), duree_blocage=4)
+    compteP.titulaire = jerome
+
+    try:
+        print(compteP.debiter(3000))
+    except BanqueSoldeException as ex:
+        print(f"Solde insuffisant [{ex.message}]")
+    except BanqueBlocageException as ex:
+        print(f"Compte bloqué [{ex.message}]")
 

@@ -1,6 +1,7 @@
 from datetime import date
 from pclient.mclient import Client
 from typing import NoReturn
+from pbanque.mexception import *
 
 class Compte :
 
@@ -29,6 +30,10 @@ class Compte :
         return self.__solde
 
     @property
+    def date_ouverture(self) -> date:
+        return self.__date_ouverture
+
+    @property
     def titulaire(self) -> Client:
         return self.__titulaire
 
@@ -39,20 +44,19 @@ class Compte :
     def crediter(self, montant: float ):
         self.__solde += montant
 
-    def debiter(self, montant: float) -> bool :
+    def debiter(self, montant: float) -> NoReturn :
         if montant > self.solde:
-            return False
+            raise BanqueSoldeException(f"Montant : {montant} - Solde : {self.solde}")
 
         self.__solde -= montant
-        return True
 
 
 
 class CompteEpargne (Compte):
     def __init__(self, numero: int, solde: float, date_ouverture: date = date.today(), taux_interet: float = 0.2, duree_blocage : int = 5):
         super().__init__(numero, solde, date_ouverture)
-        self.__taux_interet = None
-        self.__duree_blocage = None
+        self.__taux_interet = taux_interet
+        self.__duree_blocage = duree_blocage
 
     @property
     def taux_interet(self) -> float:
@@ -73,13 +77,12 @@ class CompteEpargne (Compte):
     def calcul_interet(self) -> NoReturn :
         self.crediter(self.solde * self.taux_interet)
 
-    def debiter(self, montant: float) -> bool :
+    def debiter(self, montant: float) -> NoReturn :
         date_courante : date = date.today()
 
-        duree_ecoulee = date_courante.year - self.date_ouverture.year - \
-        ((date_courante.month, date_courante.day) < (self.date_ouverture.month, self.date_ouverture.day))
-
+        duree_ecoulee = date_courante.year - self.date_ouverture.year - ((date_courante.month, date_courante.day) < (self.date_ouverture.month, self.date_ouverture.day))
+    
         if duree_ecoulee < self.duree_blocage: 
-            return False
+            raise BanqueBlocageException(f"Durée écoulée : {duree_ecoulee} - Durée de blocage : {self.duree_blocage}")
 
-        return super().debiter(montant)
+        super().debiter(montant)
