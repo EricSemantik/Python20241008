@@ -3,6 +3,7 @@ from pclient.mclient import Client
 from pcompte.mcompte import Compte, CompteEpargne
 from pbanque.mexception import *
 from pdao.mdaomemory import ClientDaoMemory, CompteDaoMemory
+from pdao.mdaocsv import ClientDaoCsv
 
 if __name__ == "__main__":
 
@@ -42,7 +43,7 @@ if __name__ == "__main__":
 
     print(f"nombre de comptes : {Compte.get_nbr_comptes()}")
 
-    jerome = Client(3, "jerome@gmail.com", "SALOMON", "Jérome")
+    jerome = Client(3, "jerome@gmail.com", "SALOMON", "Jerome")
 
     compteP = CompteEpargne(3, 452, 2000.0, date(2022, 1, 4), duree_blocage=4)
     compteP.titulaire = jerome
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     except BanqueBlocageException as ex:
         print(f"Compte bloqué [{ex.message}]")
 
-    clientDao = ClientDaoMemory()
+    clientDao = ClientDaoCsv("clients.csv")
 
     liste = clientDao.findAll()
     print(liste)

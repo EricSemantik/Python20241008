@@ -4,3 +4,11 @@ formation-python/Lib/
 formation-python/Scripts/
 
 formation-python/pyvenv.cfg
+
+factory-python/Lib/
+
+factory-python/pyvenv.cfg
+
+factory-python/Scripts/
+
+formation-python/clients.csv

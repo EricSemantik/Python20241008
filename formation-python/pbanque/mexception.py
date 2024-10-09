@@ -14,3 +14,11 @@ class BanqueSoldeException(BanqueException):
 class BanqueBlocageException(BanqueException):
     def __init__(self, message: str = ""):
         super().__init__(message)
+
+class BanqueDaoException(BanqueException):
+    def __init__(self, message: str = ""):
+        super().__init__(message)
+
+class BanqueDaoNotFoundException(BanqueDaoException):
+    def __init__(self, message: str = ""):
+        super().__init__(message)
