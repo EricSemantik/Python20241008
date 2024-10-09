@@ -2,19 +2,20 @@ from datetime import date
 from pclient.mclient import Client
 from pcompte.mcompte import Compte, CompteEpargne
 from pbanque.mexception import *
+from pdao.mdaomemory import ClientDaoMemory, CompteDaoMemory
 
 if __name__ == "__main__":
 
-    pauline = Client("pauline@hotmail.com")
+    pauline = Client(1, "pauline@hotmail.com")
     pauline.nom = "POUZOU"
     pauline.prenom = "Pauline"
 
-    julien = Client("julien@gmail.com", "CHEMLA", "Julien")
+    julien = Client(2, "julien@gmail.com", "CHEMLA", "Julien")
 
     print(julien.email)
     print(julien.nom)
 
-    compteM = Compte(54515, 200.0)
+    compteM = Compte(1, 54515, 200.0)
     compteM.titulaire = pauline
 
     print(f"numéro : {compteM.numero} - solde : {compteM.solde} - Nom : {compteM.titulaire.nom}")
@@ -23,7 +24,7 @@ if __name__ == "__main__":
 
     print(f"numéro : {compteM.numero} - solde : {compteM.solde} - Nom : {compteM.titulaire.nom}")
 
-    compteD = Compte(452, 20.0)
+    compteD = Compte(2, 452, 20.0)
     compteD.titulaire = julien
 
     print(f"numéro : {compteD.numero} - solde : {compteD.solde} - Nom : {compteD.titulaire.nom}")
@@ -41,9 +42,9 @@ if __name__ == "__main__":
 
     print(f"nombre de comptes : {Compte.get_nbr_comptes()}")
 
-    jerome = Client("jerome@gmail.com", "SALOMON", "Jérome")
+    jerome = Client(3, "jerome@gmail.com", "SALOMON", "Jérome")
 
-    compteP = CompteEpargne(452, 2000.0, date(2022, 1, 4), duree_blocage=4)
+    compteP = CompteEpargne(3, 452, 2000.0, date(2022, 1, 4), duree_blocage=4)
     compteP.titulaire = jerome
 
     try:
@@ -54,10 +55,22 @@ if __name__ == "__main__":
         print(f"Compte bloqué [{ex.message}]")
 
     clientDao = ClientDaoMemory()
-    
+
     liste = clientDao.findAll()
+    print(liste)
     clientDao.create(jerome)
+    clientDao.create(julien)
+    clientDao.create(pauline)
     liste = clientDao.findAll()
-    jeromeObject = clientDao.findbyId("jerome@gmail.com")
+    print(liste)
+    jeromeObject = clientDao.findById("jerome@gmail.com")
     jeromeObject.nom = "MACRON"
     clientDao.update(jeromeObject)
+
+    liste = clientDao.findAll()
+    print(liste)
+
+    clientDao.deleteById("jerome@gmail.com")
+
+    liste = clientDao.findAll()
+    print(liste)

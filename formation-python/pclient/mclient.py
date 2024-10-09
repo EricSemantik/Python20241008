@@ -2,7 +2,7 @@ from typing import NoReturn
 
 class Client :
 
-    def __init__(self, id: int = None ,email: str, nom : str = "", prenom : str = ""):
+    def __init__(self, id: int  = None,email: str = "", nom : str = "", prenom : str = ""):
         self.__id = id
         self.__email = email
         self.__nom = nom
