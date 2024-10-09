@@ -53,3 +53,11 @@ if __name__ == "__main__":
     except BanqueBlocageException as ex:
         print(f"Compte bloqué [{ex.message}]")
 
+    clientDao = ClientDaoMemory()
+    
+    liste = clientDao.findAll()
+    clientDao.create(jerome)
+    liste = clientDao.findAll()
+    jeromeObject = clientDao.findbyId("jerome@gmail.com")
+    jeromeObject.nom = "MACRON"
+    clientDao.update(jeromeObject)
